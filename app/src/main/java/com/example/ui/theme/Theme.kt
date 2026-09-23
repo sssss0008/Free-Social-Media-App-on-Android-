@@ -1,0 +1,104 @@
+package com.example.ui.theme
+
+import android.app.Activity
+import android.os.Build
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+
+private val SynapseDarkColorScheme = darkColorScheme(
+    primary = SynapseVioletPrimary,
+    onPrimary = Color.White,
+    primaryContainer = SynapseVioletDark,
+    onPrimaryContainer = Color(0xFFEDE9FE),
+    secondary = SynapseCyanAccent,
+    onSecondary = Color.Black,
+    secondaryContainer = Color(0xFF164E63),
+    onSecondaryContainer = Color(0xFFCFFAFE),
+    tertiary = SynapsePinkAccent,
+    onTertiary = Color.White,
+    background = SynapseObsidian,
+    onBackground = SynapseTextPrimaryDark,
+    surface = SynapseDarkSurface,
+    onSurface = SynapseTextPrimaryDark,
+    surfaceVariant = SynapseDarkCard,
+    onSurfaceVariant = SynapseTextSecondaryDark,
+    outline = SynapseDarkBorder,
+    outlineVariant = Color(0xFF334155),
+    error = SynapseRoseAccent,
+    onError = Color.White
+)
+
+private val SynapseLightColorScheme = lightColorScheme(
+    primary = SynapseVioletPrimary,
+    onPrimary = Color.White,
+    primaryContainer = Color(0xFFEDE9FE),
+    onPrimaryContainer = SynapseVioletDark,
+    secondary = Color(0xFF0891B2),
+    onSecondary = Color.White,
+    secondaryContainer = Color(0xFFCFFAFE),
+    onSecondaryContainer = Color(0xFF164E63),
+    tertiary = SynapsePinkAccent,
+    onTertiary = Color.White,
+    background = SynapseLightBg,
+    onBackground = SynapseTextPrimaryLight,
+    surface = SynapseLightSurface,
+    onSurface = SynapseTextPrimaryLight,
+    surfaceVariant = SynapseLightCard,
+    onSurfaceVariant = SynapseTextSecondaryLight,
+    outline = SynapseLightBorder,
+    outlineVariant = Color(0xFFCBD5E1),
+    error = SynapseRoseAccent,
+    onError = Color.White
+)
+
+@Composable
+fun SynapseTheme(
+    darkTheme: Boolean = true, // Default to sleek obsidian dark mode for visual impact
+    dynamicColor: Boolean = false, // Keep brand aesthetic consistent
+    content: @Composable () -> Unit
+) {
+    val colorScheme = when {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+        darkTheme -> SynapseDarkColorScheme
+        else -> SynapseLightColorScheme
+    }
+
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as? Activity)?.window
+            if (window != null) {
+                window.statusBarColor = colorScheme.background.toArgb()
+                window.navigationBarColor = colorScheme.background.toArgb()
+                val controller = WindowCompat.getInsetsController(window, view)
+                controller.isAppearanceLightStatusBars = !darkTheme
+                controller.isAppearanceLightNavigationBars = !darkTheme
+            }
+        }
+    }
+
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = Typography,
+        content = content
+    )
+}
+
+@Composable
+fun MyApplicationTheme(content: @Composable () -> Unit) {
+    SynapseTheme(content = content)
+}

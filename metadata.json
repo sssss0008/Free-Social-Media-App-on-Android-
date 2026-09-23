@@ -1,0 +1,6 @@
+{
+  "name": "Synapse",
+  "description": "Unified social super-app combining short & long-form video, visual boards, text threads, communities, messaging, live streaming, and creator studio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
